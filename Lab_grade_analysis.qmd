@@ -22,6 +22,14 @@ grades <- vroom(here("grades.csv"))
 ```
 ## Question 2
 ```{r}
+exam_stats <- grades |> 
+  summarise(
+    Min = min(Exam, na.rm = TRUE),
+    Max = max(Exam, na.rm = TRUE),
+    Median = median(Exam, na.rm = TRUE),
+    Mean = mean(Exam, na.rm = TRUE)
+  )
 
+knitr::kable(exam_stats, caption = "Exam Statistics", align = 'c')
 ```
 
