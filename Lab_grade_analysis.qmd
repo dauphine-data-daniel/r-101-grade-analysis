@@ -104,6 +104,19 @@ grades |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 ```
 
+## Question 8 (not finalised)
+```{r}
+missing_exams_per_group <- grades |> 
+  group_by(Group) |> 
+  summarise(missing_exams = sum(is.na(Exam))) |>
+  filter(missing_exams > 0) |>
+  ungroup()
+
+knitr::kable(missing_exams_per_group, 
+             caption = "Number of Students Missing Exam by Group", 
+             col.names = c("Group", "Number Missing Exam"),
+             align = c('l', 'c'))
+```
 
 
 
