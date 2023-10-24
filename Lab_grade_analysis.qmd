@@ -53,4 +53,13 @@ grades |>
   theme_minimal()
 ```
 
+## Question 5
+```{r}
+group_counts <- grades |> 
+  group_by(Group) |> 
+  summarise(Count = n())
+
+knitr::kable(group_counts, caption = "Number of Students per Group", align = 'c')
+```
+
 
