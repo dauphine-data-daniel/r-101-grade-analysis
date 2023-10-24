@@ -53,6 +53,8 @@ grades |>
   theme_minimal()
 ```
 
+For reasons of graphical representation, .5 grades were rounded to full grades using the "binwidth=1" command. 
+
 ## Question 5
 ```{r}
 group_counts <- grades |> 
@@ -60,6 +62,20 @@ group_counts <- grades |>
   summarise(Count = n())
 
 knitr::kable(group_counts, caption = "Number of Students per Group", align = 'c')
+```
+
+## Question 6
+```{r}
+grades |>
+  group_by(Group) |>
+  summarise(count = n()) |>
+  ggplot(aes(x = Group, y = count)) + 
+  geom_bar(stat = "identity", fill = "lightblue", color = "white") + 
+  labs(title = "Number of Students in Each Group", 
+       x = "Group", 
+       y = "Number of Students") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 ```
 
 
