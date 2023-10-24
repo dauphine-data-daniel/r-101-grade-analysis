@@ -33,3 +33,24 @@ exam_stats <- grades |>
 knitr::kable(exam_stats, caption = "Exam Statistics", align = 'c')
 ```
 
+## Question 3
+```{r}
+missing_exam <- grades |> 
+  filter(is.na(Exam)) |> 
+  count()
+```
+We observe that `r missing_exam` students did not take the final exam.
+
+## Question 4
+```{r}
+grades |> 
+  filter(!is.na(Exam)) |> 
+  ggplot(aes(x = Exam)) + 
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.6) +
+  labs(title = "Distribution of Exam Grades", 
+       x = "Grade", 
+       y = "Number of Students") +
+  theme_minimal()
+```
+
+
