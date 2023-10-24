@@ -77,5 +77,33 @@ grades |>
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 ```
+## Question 7
+
+```{r}
+grades |>
+  ggplot(aes(x = Group, y = Exam)) + 
+  geom_boxplot(aes(fill = Group)) + 
+  labs(title = "Distribution of Exam Grades by Group (Boxplot)", 
+       x = "Group", 
+       y = "Exam Grade") +
+  theme_minimal() + 
+  theme(legend.position = "none")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+```
+
+
+```{r}
+grades |>
+  ggplot(aes(x = Group, y = Exam)) + 
+  geom_violin(aes(fill = Group)) + 
+  labs(title = "Distribution of Exam Grades by Group (Violin Plot)", 
+       x = "Group", 
+       y = "Exam Grade") +
+  theme_minimal() + 
+  theme(legend.position = "none")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+```
+
+
 
 
