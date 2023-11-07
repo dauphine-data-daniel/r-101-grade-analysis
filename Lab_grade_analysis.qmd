@@ -15,6 +15,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(vroom)
+library(stringr)
 ```
 
 https://github.com/dauphine-data-daniel/r-101-grade-analysis
@@ -174,6 +175,17 @@ ggplot(missing_grades_per_student, aes(x = missing_grades)) +
        x = "Number of Missing Grades",
        y = "Count of Students") +
   theme_minimal()
+```
+## Question 13
+```{r}
+missing_exams_per_group <- grades_long |>
+  filter(str_starts(name, "Exam")) |>
+  group_by(Group) |>
+  summarise(missing_exams = sum(is.na(value), na.rm = TRUE)) |>
+  ungroup()
+
+knitr::kable(missing_exams_per_group, 
+             caption = "Number of Students Who Missed the Exam by Group")
 ```
 
 
