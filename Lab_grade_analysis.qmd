@@ -16,11 +16,17 @@ library(dplyr)
 library(tidyr)
 library(vroom)
 ```
+
+https://github.com/dauphine-data-daniel/r-101-grade-analysis
+
 ## Question 1
+
 ```{r}
 grades <- vroom(here("grades.csv"))
 ```
+
 ## Question 2
+
 ```{r}
 exam_stats <- grades |> 
   summarise(
@@ -34,28 +40,32 @@ knitr::kable(exam_stats, caption = "Exam Statistics", align = 'c')
 ```
 
 ## Question 3
+
 ```{r}
 missing_exam <- grades |> 
   filter(is.na(Exam)) |> 
   count()
 ```
+
 We observe that `r missing_exam` students did not take the final exam.
 
 ## Question 4
+
 ```{r}
 grades |> 
   filter(!is.na(Exam)) |> 
   ggplot(aes(x = Exam)) + 
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.6) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "white") +
   labs(title = "Distribution of Exam Grades", 
        x = "Grade", 
        y = "Number of Students") +
   theme_minimal()
 ```
 
-For reasons of graphical representation, .5 grades were rounded to full grades using the "binwidth=1" command. 
+For reasons of graphical representation, .5 grades were rounded to full grades using the "binwidth=1" command.
 
 ## Question 5
+
 ```{r}
 group_counts <- grades |> 
   group_by(Group) |> 
@@ -65,6 +75,7 @@ knitr::kable(group_counts, caption = "Number of Students per Group", align = 'c'
 ```
 
 ## Question 6
+
 ```{r}
 grades |>
   group_by(Group) |>
@@ -77,6 +88,7 @@ grades |>
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 ```
+
 ## Question 7
 
 ```{r}
@@ -91,7 +103,6 @@ grades |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 ```
 
-
 ```{r}
 grades |>
   ggplot(aes(x = Group, y = Exam)) + 
@@ -104,7 +115,8 @@ grades |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 ```
 
-## Question 8 (not finalised)
+## Question 8
+
 ```{r}
 missing_exams_per_group <- grades |> 
   group_by(Group) |> 
@@ -118,5 +130,50 @@ knitr::kable(missing_exams_per_group,
              align = c('l', 'c'))
 ```
 
+## Question 9
+```{r}
+missing_exams_per_group <- grades |> 
+  group_by(Group) |> 
+  summarise(missing_exams = sum(is.na(Exam), na.rm = TRUE)) |>
+  ungroup()
+
+ggplot(missing_exams_per_group, aes(x = Group, y = missing_exams, fill = Group)) +
+  geom_col() +
+  labs(title = "Number of Students Missing Exam by Group",
+       x = "group",
+       y = "amount of students who missed the exam") +
+  scale_fill_brewer(palette = "Paired") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+## Question 10
+Creation of a new reshaped data frame. Id and Group are excluded from reshaping.
+```{r}
+grades_long <- grades |> 
+  pivot_longer(
+    cols = -c(Id, Group),
+    names_to = "name",
+    values_to = "value"
+  )
+```
+
+## Question 11 
+Using the long format, the number of missing grades in total for each student is computed.
+```{r}
+missing_grades_per_student <- grades_long |> 
+  group_by(Id) |> 
+  summarise(missing_grades = sum(is.na(value)))
+```
+## Question 12
+```{r}
+ggplot(missing_grades_per_student, aes(x = missing_grades)) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "white") +
+  labs(title = "Distribution of Missing Grades per Student",
+       x = "Number of Missing Grades",
+       y = "Count of Students") +
+  theme_minimal()
+```
 
 
