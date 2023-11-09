@@ -21,6 +21,7 @@ library(stringr)
 https://github.com/dauphine-data-daniel/r-101-grade-analysis
 
 ## Question 1
+
 Data set got loaded.
 
 ```{r}
@@ -123,7 +124,6 @@ grades |>
 missing_exams_per_group <- grades |> 
   group_by(Group) |> 
   summarise(missing_exams = sum(is.na(Exam))) |>
-  filter(missing_exams > 0) |>
   ungroup()
 
 knitr::kable(missing_exams_per_group, 
@@ -133,25 +133,25 @@ knitr::kable(missing_exams_per_group,
 ```
 
 ## Question 9
+
 ```{r}
 missing_exams_per_group <- grades |> 
   group_by(Group) |> 
-  summarise(missing_exams = sum(is.na(Exam), na.rm = TRUE)) |>
+  summarise(missing_exams = sum(is.na(Exam))) |>
   ungroup()
 
-ggplot(missing_exams_per_group, aes(x = Group, y = missing_exams, fill = Group)) +
-  geom_col() +
+ggplot(missing_exams_per_group, aes(x = Group, y = missing_exams)) +
+  geom_col(fill = "lightblue", color = "white") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(title = "Number of Students Missing Exam by Group",
-       x = "group",
-       y = "amount of students who missed the exam") +
-  scale_fill_brewer(palette = "Paired") + 
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
+       x = "Group",
+       y = "Amount of students who missed the exam")
 ```
 
 ## Question 10
+
 Creation of a new reshaped data frame. Id and Group are excluded from reshaping.
+
 ```{r}
 grades_long <- grades |> 
   pivot_longer(
@@ -161,14 +161,18 @@ grades_long <- grades |>
   )
 ```
 
-## Question 11 
+## Question 11
+
 Using the long format, the number of missing grades in total for each student is computed.
+
 ```{r}
 missing_grades_per_student <- grades_long |> 
   group_by(Id) |> 
   summarise(missing_grades = sum(is.na(value)))
 ```
+
 ## Question 12
+
 ```{r}
 ggplot(missing_grades_per_student, aes(x = missing_grades)) +
   geom_histogram(binwidth = 1, fill = "lightblue", color = "white") +
@@ -177,7 +181,9 @@ ggplot(missing_grades_per_student, aes(x = missing_grades)) +
        y = "Count of Students") +
   theme_minimal()
 ```
+
 ## Question 13
+
 ```{r}
 missing_exams_per_group <- grades_long |>
   filter(str_starts(name, "Exam")) |>
@@ -188,8 +194,11 @@ missing_exams_per_group <- grades_long |>
 knitr::kable(missing_exams_per_group, 
              caption = "Number of Students Who Missed the Exam by Group")
 ```
+
 ## Question 14
+
 The Number of Missing Online Tests per student is computed.
+
 ```{r}
 missing_online_tests_per_student <- grades_long |>
   filter(str_starts(name, "Online_MCQ")) |>
@@ -200,6 +209,7 @@ missing_online_tests_per_student <- grades_long |>
 ```
 
 ## Question 15
+
 ```{r}
 missing_online_tests <- grades |> 
   rowwise() |> 
@@ -222,7 +232,9 @@ ggplot(grades_with_missing_online_tests, aes(x = missing_online_tests, y = Exam)
 ```
 
 ## Question 16
+
 Table got created with two columns "Id" and "Missed" with value TRUE when the student misses at least one "MCQ_xx" grade and FALSE when they miss no grade.
+
 ```{r}
 missed_mcqs <- grades |>
   rowwise() |>
@@ -232,7 +244,9 @@ missed_mcqs <- grades |>
 ```
 
 ## Question 17
+
 Table got created with two columns "Group" and "P_missed" with percentage of students in each group who missed at least one "MCQ_xx grade".
+
 ```{r}
 grades_with_missed_mcq <- grades |>
   rowwise() |>
@@ -246,6 +260,7 @@ percentage_missed_per_group <- grades_with_missed_mcq |>
 ```
 
 ## Question 18
+
 ```{r}
 average_exam_grade_per_group <- grades |>
   group_by(Group) |>
@@ -263,6 +278,3 @@ ggplot(merged_data, aes(x = P_missed, y = Average_Exam_Grade)) +
   theme_minimal()
 
 ```
-
-
-
